@@ -18,7 +18,7 @@ def _make_ievent(ev):
 		domain=_get_current_domain(),
 		url=ev.get_absolute_url(),
 	))
-	iev.add('location', ev.location)
+	iev.add('location', ev.event_location.location)
 	iev.add('dtstamp', ev.start_datetime)
 	iev.add('dtstart', ev.start_datetime)
 	iev.add('dtend', ev.end_datetime)

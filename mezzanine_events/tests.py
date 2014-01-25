@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 
 from django.test import TestCase
 from django.test.client import Client
-from .models import EventContainer, Event
+from .models import EventLocation, EventContainer, Event
 from mezzanine.core.models import CONTENT_STATUS_DRAFT, CONTENT_STATUS_PUBLISHED
 from datetime import datetime, timedelta
 
@@ -10,6 +10,14 @@ from datetime import datetime, timedelta
 class EventTests (TestCase):
     urls = "mezzanine_events.test_urls"
     def setUp(self):
+        self.el = EventLocation.objects.create(
+            location='1 Susan St\nHindmarsh\nSouth Australia',
+        )
+        self.el.save()
+        self.unicode_el = EventLocation.objects.create(
+            location='\u30b5\u30f3\u30b7\u30e3\u30a4\u30f360',
+        )
+        self.unicode_el.save()
         self.ec = EventContainer.objects.create(
             slug='cont',
         )
@@ -21,7 +29,7 @@ class EventTests (TestCase):
             start_datetime=datetime.now(),
             end_datetime=datetime.now()+timedelta(hours=4),
             speakers='Fred\nJoe',
-            location='1 Susan St\nHindmarsh\nSouth Australia',
+            event_location=self.el,
             rsvp='By 31 December to aaa@bbb.com',
             status=CONTENT_STATUS_PUBLISHED,
         )
@@ -33,7 +41,7 @@ class EventTests (TestCase):
             start_datetime=datetime.now(),
             end_datetime=datetime.now()+timedelta(hours=4),
             speakers='Fred\nJoe',
-            location='1 Susan St\nHindmarsh\nSouth Australia',
+            event_location=self.el,
             rsvp='By 31 December to aaa@bbb.com',
             status=CONTENT_STATUS_DRAFT,
         )
@@ -44,7 +52,7 @@ class EventTests (TestCase):
             title='\xe9\x9d\x9eASCII\xe3\x82\xbf\xe3\x82\xa4\xe3\x83\x88\xe3\x83\xab',
             start_datetime=datetime.now(),
             end_datetime=datetime.now()+timedelta(hours=4),
-            location='\u30b5\u30f3\u30b7\u30e3\u30a4\u30f360',
+            event_location=self.unicode_el,
             status=CONTENT_STATUS_PUBLISHED,
         )
         self.unicode_event.save()
@@ -54,14 +62,14 @@ class EventTests (TestCase):
         self.assertEqual(self.event.speakers_list(), ['Fred', 'Joe'])
     
     def test_clean(self):
-        self.event.clean()
-        self.assertAlmostEqual(self.event.lat, -34.907924, places=5)
-        self.assertAlmostEqual(self.event.lon, 138.567624, places=5)
-        self.assertEqual(self.event.mappable_location, '1 Susan Street, Hindmarsh SA 5007, Australia')
+        self.el.clean()
+        self.assertAlmostEqual(self.el.lat, -34.907924, places=5)
+        self.assertAlmostEqual(self.el.lon, 138.567624, places=5)
+        self.assertEqual(self.el.mappable_location, '1 Susan Street, Hindmarsh SA 5007, Australia')
         
-        self.unicode_event.clean()
-        self.assertAlmostEqual(self.unicode_event.lat, 35.729534, places=5)
-        self.assertAlmostEqual(self.unicode_event.lon, 139.718055, places=5)
+        self.unicode_el.clean()
+        self.assertAlmostEqual(self.unicode_el.lat, 35.729534, places=5)
+        self.assertAlmostEqual(self.unicode_el.lon, 139.718055, places=5)
     
     def test_urls(self):
         c = Client()
