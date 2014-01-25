@@ -2,7 +2,6 @@ from mezzanine.pages.models import Page
 from django.http import Http404, HttpResponse
 from .models import Event, EventContainer, _get_current_domain
 from icalendar import Calendar as ICalendar, Event as IEvent
-from datetime import datetime
 from . import __version__
 
 def _make_icalendar():
@@ -20,9 +19,9 @@ def _make_ievent(ev):
 		url=ev.get_absolute_url(),
 	))
 	iev.add('location', ev.location)
-	iev.add('dtstamp', datetime.combine(ev.date, ev.start_time))
-	iev.add('dtstart', datetime.combine(ev.date, ev.start_time))
-	iev.add('dtend', datetime.combine(ev.date, ev.end_time))
+	iev.add('dtstamp', ev.start_datetime)
+	iev.add('dtstart', ev.start_datetime)
+	iev.add('dtend', ev.end_datetime)
 	iev['uid'] = "event-{id}@{domain}".format(
 		id=ev.id,
 		domain=_get_current_domain(),

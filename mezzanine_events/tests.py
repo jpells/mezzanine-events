@@ -4,7 +4,7 @@ from django.test import TestCase
 from django.test.client import Client
 from .models import EventContainer, Event
 from mezzanine.core.models import CONTENT_STATUS_DRAFT, CONTENT_STATUS_PUBLISHED
-from datetime import date, time
+from datetime import datetime, timedelta
 
 
 class EventTests (TestCase):
@@ -18,9 +18,8 @@ class EventTests (TestCase):
             slug='cont/blah',
             title='THIS IS AN EVENT THAT IS PUBLISHED',
             parent=self.ec,
-            date=date.today(),
-            start_time=time(9),
-            end_time=time(17,30),
+            start_datetime=datetime.now(),
+            end_datetime=datetime.now()+timedelta(hours=4),
             speakers='Fred\nJoe',
             location='1 Susan St\nHindmarsh\nSouth Australia',
             rsvp='By 31 December to aaa@bbb.com',
@@ -31,9 +30,8 @@ class EventTests (TestCase):
             slug='cont/draft',
             title='THIS IS AN EVENT THAT IS A DRAFT',
             parent=self.ec,
-            date=date.today(),
-            start_time=time(9),
-            end_time=time(17,30),
+            start_datetime=datetime.now(),
+            end_datetime=datetime.now()+timedelta(hours=4),
             speakers='Fred\nJoe',
             location='1 Susan St\nHindmarsh\nSouth Australia',
             rsvp='By 31 December to aaa@bbb.com',
@@ -44,9 +42,8 @@ class EventTests (TestCase):
             slug='cont/\u30b5\u30f3\u30b7\u30e3\u30a4\u30f360',
             parent=self.ec,
             title='\xe9\x9d\x9eASCII\xe3\x82\xbf\xe3\x82\xa4\xe3\x83\x88\xe3\x83\xab',
-            date=date.today(),
-            start_time=time(18),
-            end_time=time(23,59),
+            start_datetime=datetime.now(),
+            end_datetime=datetime.now()+timedelta(hours=4),
             location='\u30b5\u30f3\u30b7\u30e3\u30a4\u30f360',
             status=CONTENT_STATUS_PUBLISHED,
         )

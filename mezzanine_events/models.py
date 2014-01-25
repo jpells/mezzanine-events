@@ -5,17 +5,16 @@ from django.core.exceptions import ValidationError
 from geopy.geocoders import GoogleV3 as GoogleMaps
 from geopy.geocoders.googlev3 import GQueryError
 from django.contrib.sites.models import Site
-from datetime import timedelta, datetime as dt
 from mezzanine.utils.sites import current_site_id
 from mezzanine.conf import settings
+from django.utils.translation import ugettext_lazy as _
 
 def _get_current_domain():
 	return Site.objects.get(id=current_site_id()).domain
 
 class Event(Page, RichText):
-	date = models.DateField()
-	start_time = models.TimeField()
-	end_time = models.TimeField()
+	start_datetime = models.DateTimeField(_("Start"))
+	end_datetime = models.DateTimeField(_("End"))
 	speakers = models.TextField(blank=True, help_text="Leave blank if not relevant. Write one name per line.")
 	location = models.TextField()
 	mappable_location = models.CharField(max_length=128, blank=True, help_text="This address will be used to calculate latitude and longitude. Leave blank and set Latitude and Longitude to specify the location yourself, or leave all three blank to auto-fill from the Location field.")
@@ -25,12 +24,6 @@ class Event(Page, RichText):
 
 	def speakers_list(self):
 		return [x for x in self.speakers.split("\n") if x.strip() != ""]
-
-	def start_datetime(self):
-		return dt.combine(self.date, self.start_time)
-
-	def end_datetime(self):
-		return dt.combine(self.date, self.end_time)
 
 	def clean(self):
 		super(Event, self).clean()
