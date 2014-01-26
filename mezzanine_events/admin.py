@@ -7,7 +7,8 @@ from copy import deepcopy
 # event_admin_fieldsets[0][1]["fields"]
 
 class EventLocationAdmin(admin.ModelAdmin):
-	pass
+	def in_menu(self):
+		return 0
 
 class EventAdmin (PageAdmin):
 	fieldsets = (
