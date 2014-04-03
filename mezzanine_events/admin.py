@@ -7,17 +7,17 @@ from copy import deepcopy
 # event_admin_fieldsets[0][1]["fields"]
 
 class EventLocationAdmin(admin.ModelAdmin):
-	def in_menu(self):
-		return 0
+    def in_menu(self):
+        return 0
 
 class EventAdmin (PageAdmin):
-	fieldsets = (
-		deepcopy(PageAdmin.fieldsets[0]),
-		("Event details",{
-			'fields': ('content', ('start_datetime', 'end_datetime'), 'event_location', 'speakers', 'rsvp')
-		}),
-		deepcopy(PageAdmin.fieldsets[1]),
-	)
+    fieldsets = (
+        deepcopy(PageAdmin.fieldsets[0]),
+        ("Event details",{
+            'fields': ('content', ('start_datetime', 'end_datetime'), 'event_location', 'speakers', 'rsvp')
+        }),
+        deepcopy(PageAdmin.fieldsets[1]),
+    )
 
 admin.site.register(EventLocation, EventLocationAdmin)
 
