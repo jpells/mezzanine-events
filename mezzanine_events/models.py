@@ -51,9 +51,16 @@ class Event(Page, RichText):
     speakers = models.TextField(blank=True, help_text="Leave blank if not relevant. Write one name per line.")
     rsvp = models.TextField(blank=True, help_text="RSVP information. Leave blank if not relevant. Emails will be converted into links.")
     event_location = models.ForeignKey(EventLocation)
+    facebook_event = models.BigIntegerField(_('Facebook'), blank=True, null=True)
 
     def speakers_list(self):
         return [x for x in self.speakers.split("\n") if x.strip() != ""]
+
+    def clean(self):
+        super(Event, self).clean()
+
+        if self.start_datetime > self.end_datetime:
+            raise ValidationError("Start datetime must be sooner than end datetime.")
 
     def save(self, *args, **kwargs):
         # determine whether the page needs to be hidden
