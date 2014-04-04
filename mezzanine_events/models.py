@@ -47,7 +47,7 @@ class EventLocation(models.Model):
 
 class Event(Page, RichText):
     start_datetime = models.DateTimeField(_("Start"))
-    end_datetime = models.DateTimeField(_("End"))
+    end_datetime = models.DateTimeField(_("End"), blank=True, null=True)
     speakers = models.TextField(blank=True, help_text="Leave blank if not relevant. Write one name per line.")
     rsvp = models.TextField(blank=True, help_text="RSVP information. Leave blank if not relevant. Emails will be converted into links.")
     event_location = models.ForeignKey(EventLocation)
@@ -59,7 +59,7 @@ class Event(Page, RichText):
     def clean(self):
         super(Event, self).clean()
 
-        if self.start_datetime > self.end_datetime:
+        if self.end_datetime and self.start_datetime > self.end_datetime:
             raise ValidationError("Start datetime must be sooner than end datetime.")
 
     def save(self, *args, **kwargs):

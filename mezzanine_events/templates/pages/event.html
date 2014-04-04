@@ -14,7 +14,7 @@
 </div>
 
 <p class='lead'>
-	from {{page.event.start_datetime}} to {{page.event.end_datetime}}
+	{% if page.event.end_datetime %}from {% endif %}{{page.event.start_datetime}}{% if page.event.end_datetime %} to {{page.event.end_datetime}}{% endif %}
 </p>
 
 <div class="row-fluid">
