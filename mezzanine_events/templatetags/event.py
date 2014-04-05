@@ -26,7 +26,10 @@ def google_calendar_url(event):
     else:
         end_date = start_date
     url = _get_current_domain() + event.get_absolute_url()
-    location = quote(event.event_location.mappable_location)
+    if event.event_location:
+        location = quote(event.event_location.mappable_location)
+    else:
+        location = None
     return "http://www.google.com/calendar/event?action=TEMPLATE&text={title}&dates={start_date}/{end_date}&sprop=website:{url}&location={location}&trp=true".format(**locals())
 
 @register.filter(is_safe=True)
