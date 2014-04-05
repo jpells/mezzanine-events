@@ -22,9 +22,9 @@ def google_calendar_url(event):
     title = quote(event.title)
     start_date = get_utc(event.start_datetime).strftime("%Y%m%dT%H%M%SZ")
     if event.end_datetime:
-        end_date = start_time
+        end_date = get_utc(event.end_datetime).strftime("%Y%m%dT%H%M%SZ")
     else:
-        end_date = ""
+        end_date = start_date
     url = _get_current_domain() + event.get_absolute_url()
     location = quote(event.event_location.mappable_location)
     return "http://www.google.com/calendar/event?action=TEMPLATE&text={title}&dates={start_date}/{end_date}&sprop=website:{url}&location={location}&trp=true".format(**locals())
@@ -34,7 +34,7 @@ def google_nav_url(event):
     if not isinstance(event, Event):
         return ''
     location = quote(event.event_location.mappable_location)
-    return "https://{}/maps?daddr={}".format(settings.MZEVENTS_GOOGLE_MAPS_DOMAIN, location)
+    return "https://{}/maps?daddr={}".format(settings.MZEVENTS_GOOGLE_MAPS_DOMAIN.decode('utf-8'), location)
 
 @register.tag
 def google_static_map(parser, token):
