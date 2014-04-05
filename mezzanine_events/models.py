@@ -50,7 +50,7 @@ class Event(Page, RichText):
     end_datetime = models.DateTimeField(_("End"), blank=True, null=True)
     speakers = models.TextField(blank=True, help_text="Leave blank if not relevant. Write one name per line.")
     rsvp = models.TextField(blank=True, help_text="RSVP information. Leave blank if not relevant. Emails will be converted into links.")
-    event_location = models.ForeignKey(EventLocation)
+    event_location = models.ForeignKey(EventLocation, blank=True, null=True)
     facebook_event = models.BigIntegerField(_('Facebook'), blank=True, null=True)
 
     def speakers_list(self):
